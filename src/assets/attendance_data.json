@@ -1,0 +1,104 @@
+{
+    "Attendance": [
+        {
+            "rollno": "1",
+            "attendance": "99"
+        },
+        {
+            "rollno": "2",
+            "attendance": "100"
+        },
+        {
+            "rollno": "3",
+            "attendance": "66"
+        },
+        {
+            "rollno": "4",
+            "attendance": "97"
+        },
+        {
+            "rollno": "5",
+            "attendance": "99"
+        },
+        {
+            "rollno": "6",
+            "attendance": "92"
+        },
+        {
+            "rollno": "7",
+            "attendance": "97"
+        },
+        {
+            "rollno": "8",
+            "attendance": "72"
+        },
+        {
+            "rollno": "9",
+            "attendance": "100"
+        },
+        {
+            "rollno": "10",
+            "attendance": "93"
+        },
+        {
+            "rollno": "11",
+            "attendance": "58"
+        },
+        {
+            "rollno": "12",
+            "attendance": "67"
+        },
+        {
+            "rollno": "13",
+            "attendance": "83"
+        },
+        {
+            "rollno": "14",
+            "attendance": "73"
+        },
+        {
+            "rollno": "15",
+            "attendance": "93"
+        },
+        {
+            "rollno": "16",
+            "attendance": "73"
+        },
+        {
+            "rollno": "17",
+            "attendance": "52"
+        },
+        {
+            "rollno": "18",
+            "attendance": "63"
+        },
+        {
+            "rollno": "19",
+            "attendance": "76"
+        },
+        {
+            "rollno": "20",
+            "attendance": "90"
+        },
+        {
+            "rollno": "21",
+            "attendance": "65"
+        },
+        {
+            "rollno": "22",
+            "attendance": "57"
+        },
+        {
+            "rollno": "23",
+            "attendance": "77"
+        },
+        {
+            "rollno": "24",
+            "attendance": "99"
+        },
+        {
+            "rollno": "25",
+            "attendance": "86"
+        }
+    ]
+}

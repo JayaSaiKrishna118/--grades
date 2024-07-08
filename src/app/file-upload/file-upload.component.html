@@ -1,0 +1,112 @@
+<div class="container-fluid">
+  <div class="row">
+    <!-- Left Card (Course Selection) -->
+    <div class="col-12 col-md-3 mb-3">
+      <div class="card vh-75">
+        <div class="card-header text-uppercase">Courses</div>
+        <div class="card-body">
+          <div class="table-responsive-sm">
+            <table class="table table-hover">
+              <tbody>
+                <tr *ngFor="let course of courses" (click)="displayCourse(course)" role="button">
+                  <td class="d-flex justify-content-between align-items-center">
+                    <span class="text-truncate col-11">
+                      <span class="fw-bold">{{ course.code }}</span>
+                      <small>{{ " (" + course.name + ")" }}</small>
+                    </span>
+                    <i *ngIf="course.code === selectedCourseCode" class="fas fa-arrow-right text-primary"></i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Card (Upload and Preview) -->
+    <div class="col-12 col-md-9">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">File Upload and Preview</h5>
+        </div>
+        <div class="card-body">
+          <!-- Selected Course Display -->
+          <div *ngIf="selectedCourseCode && selectedCourseType" class="mb-3">
+            <h6>Selected Course:</h6>
+            <p>{{ selectedCourseCode }} - {{ selectedCourseType }}</p>
+          </div>
+
+          <!-- Total Marks and Test Type Selection -->
+          <div class="row mb-3">
+            <div class="col-12 col-md-6">
+              <label for="totalMarks">Total Marks:</label>
+              <input id="totalMarks" type="number" class="form-control" [(ngModel)]="selectedTotalMarks" min="0" max="100" (input)="validateTotalMarks()">
+            </div>
+            <div class="col-12 col-md-6">
+              <label for="testType">Test Type:</label>
+              <select id="testType" class="form-control" [(ngModel)]="selectedTestType">
+                <option *ngFor="let test of testTypes" [value]="test">{{ test }}</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Download and Upload Section -->
+          <div class="d-flex flex-column align-items-center gap-4">
+            <div class="d-flex flex-column align-items-center gap-2">
+              <span class="text-info-emphasis">Download the Latest Template:</span>
+              <button type="button" class="btn btn-outline-primary mb-3" (click)="downloadCSV()">
+                <i class="fa-solid fa-file-csv"></i> Download CSV <i class="fas fa-download"></i>
+              </button>
+            </div>
+
+            <div class="p-5 d-flex align-items-center flex-column mb-3"
+              (drop)="onDrop($event)"
+              (dragover)="onDragOver($event)"
+              style="border: 2px dashed #ccc; padding: 20px; text-align: center; cursor: pointer;">
+              <label class="btn btn-default p-0">
+                <input type="file" #fileInput style="display: none" (change)="onFileChange($event)" accept=".csv, .xlsx" />
+                <button class="btn btn-success btn-sm" [disabled]="isUploaded" (click)="fileInput.click()">
+                  {{ isUploaded ? 'Preview' : 'Upload CSV' }}
+                </button>
+              </label>
+              <p>Drag and drop your CSV file here, or click to select file</p>
+            </div>
+
+            <div class="row mt-3">
+              <div class="col-12">
+                <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- File Content Preview Section -->
+          <div class="row mt-3" *ngIf="fileContent">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">CSV File Contents</div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th *ngFor="let header of headers">{{ header }}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let row of fileContent.split('\n')">
+                          <td *ngFor="let cell of row.split(',')">{{ cell }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

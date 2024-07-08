@@ -1,0 +1,206 @@
+<div class="container-fluid">
+  <h2>Preview Page</h2>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-header">Course Details</div>
+
+          <div class="card mt-2">
+            <div class="row">
+              <div class="col-sm-6">
+                <p><span class="fw-bold">Course Code:</span> {{ selectedCourseCode }}</p>
+                <p><span class="fw-bold">Course Name:</span> {{ selectedCourseType }}</p>
+              </div>
+              <div class="col-sm-6">
+                <p><span class="fw-bold">Total Marks:</span> {{ selectedTotalMarks }}</p>
+                <p><span class="fw-bold">Test Type:</span> {{ selectedTestType }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Validation Errors -->
+  <div *ngIf="validationErrors.length > 0" class="card mb-3">
+    <div class="card-header">Validation Errors</div>
+    <div class="card-body">
+      <ul>
+        <li *ngFor="let error of validationErrors">
+          <strong>{{ error.column }}:</strong> {{ error.error }}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+<!-- Student Details -->
+<div class="card mb-3">
+  <div class="card-header">Student Details</div>
+  <div class="card-body">
+    <!-- Search Input and Pagination -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-3">
+      <!-- Search Input -->
+      <div class="d-flex flex-row align-items-center mb-2 mb-md-0 me-2">
+        <div class="input-group border rounded border-light">
+          <span class="input-group-text border-0 bg-white">
+            <i class="fa fa-search mt-1" aria-hidden="true"></i>
+          </span>
+          <input
+            id="table-filtering-search"
+            type="text"
+            class="form-control border-0"
+            placeholder="Search ..."
+            [formControl]="filter"
+            aria-label="Search"
+            aria-describedby="basic-addon1"
+          />
+        </div>
+      </div>
+      
+      <!-- Pagination and Page Size Selector -->
+      <div class="d-flex flex-grow-1 justify-content-center mb-2 mb-md-0">
+        <ngb-pagination
+          class="mx-auto"
+          [collectionSize]="collectionSize"
+          [(page)]="page"
+          [pageSize]="pageSize"
+          [boundaryLinks]="true"
+          [maxSize]="2"
+          [rotate]="true"
+          [ellipses]="true"
+          (pageChange)="refreshPageData()">
+        </ngb-pagination>
+      </div>
+
+      <div class="d-flex align-items-center">
+        <select class="form-select ms-2" style="width: auto" [(ngModel)]="pageSize" (ngModelChange)="refreshPageData()">
+          <option [ngValue]="2">2 items per page</option>
+          <option [ngValue]="4">4 items per page</option>
+          <option [ngValue]="6">6 items per page</option>
+          <option [ngValue]="10">10 items per page</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Sl. No.</th>
+            <th *ngFor="let header of headers">{{ header }}</th>
+            <th>Attendance</th>
+            <th>Marks Percentage</th>
+            <th>Marks Grade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let student of currentPageData$ | async; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td *ngFor="let header of headers">
+              <ngb-highlight [result]="student[header]" [term]="filter.value"></ngb-highlight>
+            </td>
+            <td>{{ student['Attendance'] }}</td>
+            <td>{{ student['Marks Percentage'] }}</td>
+            <td>{{ student['Marks Grade'] }}</td>
+          </tr>
+          <tr *ngIf="(currentPageData$ | async)?.length === 0">
+            <td [attr.colspan]="headers.length + 3" class="text-center">No students found</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+  <div class="row">
+    <!-- Grade Analytics -->
+     <!-- Grade Analytics -->
+     <div class="col-lg-9">
+      <div class="card mb-3">
+        <div class="card-header">Grade Analytics</div>
+        <app-histogram
+          [chartData]="histogramChartData"
+          [chartOptions]="histogramChartOptions"
+        ></app-histogram>
+      </div>
+    </div>
+    
+    <ngx-slider [value]="value" [options]="sliderOptions"></ngx-slider>
+
+    <div class="grade-slider">
+      <div *ngFor="let boundary of gradeBoundaries; let i = index">
+        <label>{{ boundary.grade }}:</label>
+        <input type="range"
+               [(ngModel)]="boundary.cutoff"
+               (input)="onCutoffChange(i)"
+               min="0"
+               max="100">
+        <span>{{ boundary.cutoff }}</span>
+      </div>
+    </div>
+    <!-- Grade Boundaries -->
+    <div class="col-lg-3">
+      <div class="card mb-3">
+        <div class="card-header">Grade Boundaries</div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Grade</th>
+                <th>Cutoff</th>
+                <th>No. of Students</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let boundary of gradeBoundaries; let i = index">
+                <td>{{ boundary.grade }}</td>
+                <td>
+                  <input 
+                    type="number"
+                    [(ngModel)]="boundary.cutoff"
+                    (change)="updateGradeBoundaries()"
+                    [attr.min]="i < gradeBoundaries.length - 1 ? gradeBoundaries[i + 1].cutoff + 1 : 0"
+                    [attr.max]="100"
+                  />
+                </td>
+                <td>{{ gradeData[boundary.grade] || 0 }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+    
+
+  <!-- Static Grade Boundaries Information -->
+  <!-- <div class="card mt-3">
+    <div class="card-header">Grade Boundaries Information</div>
+    <div class="card-body">
+      <ul class="list-group">
+        <li class="list-group-item"><strong>S:</strong> 80-100</li>
+        <li class="list-group-item"><strong>A:</strong> 65-79</li>
+        <li class="list-group-item"><strong>B:</strong> 55-64</li>
+        <li class="list-group-item"><strong>C:</strong> 45-54</li>
+        <li class="list-group-item"><strong>D:</strong> 35-44</li>
+        <li class="list-group-item"><strong>E:</strong> 25-34</li>
+        <li class="list-group-item"><strong>U:</strong> 0-24</li>
+        <li class="list-group-item"><strong>I:</strong> 0-0</li>
+        <li class="list-group-item"><strong>W:</strong> 0-0</li>
+      </ul>
+    </div>
+  </div> -->
+
+  <!-- <div class="row">
+    <div class="col-12">
+      <button class="btn btn-success mt-3" (click)="submitGrades()">Submit Grades</button>
+    </div>
+  </div>
+</div> -->
